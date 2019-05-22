@@ -22,10 +22,11 @@ public class EasyTest {
 
     @Test
      void easyTest(){
-        driver.get("https://github.com/AlexeyCode/sel-b5");
-        driver.findElement(By.xpath("//a[text()=\"Find File\"]")).click();
-        assertEquals("GitHub - AlexeyCode/sel-b5", driver.getTitle());
-
+        driver.get("http://localhost:85/litecart/admin");//порт 85, 80 занят на рабочем пк
+        driver.findElement(By.xpath("//input[@name=\"username\"]")).sendKeys("admin");
+        driver.findElement(By.xpath("//input[@name=\"password\"]")).sendKeys("admin");
+        driver.findElement(By.xpath("//button[@name=\"login\"]")).click();
+        assertEquals("My Store", driver.getTitle());
     }
 
     @AfterAll
