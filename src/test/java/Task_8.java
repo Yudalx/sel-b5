@@ -24,7 +24,7 @@ public class Task_8 {
     void task_8Test(){
         driver.get("http://localhost:85/litecart");//порт 85, 80 занят на рабочем пк
 
-        List<WebElement> productList = driver.findElements(By.xpath("//div[@class=\"image-wrapper\"]"));
+        List<WebElement> productList = driver.findElements(By.xpath("//li[contains(@class, \"product\")]"));
         for(WebElement element : productList){
             assertEquals(1, element.findElements(By.xpath(".//div[contains(@class, \"sticker\")]")).size());
         }
