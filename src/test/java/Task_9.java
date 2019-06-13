@@ -71,7 +71,7 @@ public class Task_9 {
             List<String> zoneName = new ArrayList<>();
 
             for(WebElement element : elementList){
-                zoneName.add(element.getText());
+                zoneName.add(element.getAttribute("value"));
             }
 
         List<String> zoneNameSorted = new ArrayList<>(zoneName);
