@@ -88,16 +88,30 @@ public class Task_9 {
         driver.get("http://localhost:85/litecart/admin/?app=geo_zones&doc=geo_zones");
         List<WebElement> elementList = driver.findElements(By.xpath("//tr[@class=\"row\"]/td/a[@title=\"Edit\"]"));
         List<String> linkList = new ArrayList<>();
+
         for(WebElement element : elementList){
            linkList.add(element.getAttribute("href"));
         }
 
         for(String s : linkList){
             driver.get(s);
+
+            List<String> zoneNames = new ArrayList<>();
             List<WebElement> zoneList = driver.findElements(By.xpath("" +
-                    "//input[@type = \"hidden\" and contains(@name, \"zones\")]"));
+                    "//select[contains(@name, \"zone_code\")]/option[@selected = \"selected\"]"));
 
             assertTrue(zoneList.size() > 0);
+
+            for(WebElement element : zoneList){
+                zoneNames.add(element.getAttribute("textContent"));
+            }
+
+            List<String> zoneNamesSorted = new ArrayList<>(zoneNames);
+            Collections.sort(zoneNamesSorted);
+
+            for(int i = 0; i < zoneNames.size(); i++){
+                assertEquals(zoneNamesSorted.get(i), zoneNames.get(i));
+            }
         }
     }
 
