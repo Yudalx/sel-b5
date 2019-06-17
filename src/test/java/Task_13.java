@@ -6,12 +6,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 
 public class Task_13 {
     private static WebDriver driver;
@@ -26,13 +29,33 @@ public class Task_13 {
     @Test
     void task_13() {
         WebDriverWait wait = new WebDriverWait(driver, 10/*seconds*/);
-        driver.get("http://localhost:85/litecart");//порт 85, 80 занят на рабочем пк
+        driver.get("http://litecart.stqa.ru");//порт 85, 80 занят на рабочем пк
         driver.findElement(By.xpath("//li[contains(@class, \"product\")]")).click();
         WebElement basket = driver.findElement(By.xpath("//span[@class=\"quantity\"]"));
         int productQuantity = 0;
         assertEquals(productQuantity, Integer.parseInt(basket.getText()));
+
         driver.findElement(By.xpath("//button[@name=\"add_cart_product\"]")).click();
-        wait.until((WebDriver d) -> d.switchTo().alert()).accept();
+        wait.until(ExpectedConditions.attributeContains(basket, "textContent", "1"));
+
+        driver.navigate().back();
+
+        wait.until(stalenessOf(basket));
+        basket = driver.findElement(By.xpath("//span[@class=\"quantity\"]"));
+
+        driver.findElement(By.xpath("//li[contains(@class, \"product\")]")).click();
+        driver.findElement(By.xpath("//button[@name=\"add_cart_product\"]")).click();
+        wait.until(ExpectedConditions.attributeContains(basket, "textContent", "2"));
+
+        driver.navigate().back();
+        wait.until(stalenessOf(basket));
+        basket = driver.findElement(By.xpath("//span[@class=\"quantity\"]"));
+
+        driver.findElement(By.xpath("//li[contains(@class, \"product\")]")).click();
+        driver.findElement(By.xpath("//button[@name=\"add_cart_product\"]")).click();
+
+
+        // wait.until((WebDriver d) -> d.switchTo().alert()).accept();
 
 
 
@@ -46,6 +69,9 @@ public class Task_13 {
 
     @AfterAll
     static void tearDown(){
-        driver.quit();
+        //driver.quit();
+    }
+    void useSelectSizeIfPresent(String locator){
+
     }
 }
