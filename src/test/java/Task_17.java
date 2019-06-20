@@ -1,18 +1,12 @@
-import net.lightbody.bmp.core.har.Har;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.List;
-import java.util.Set;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 @Execution(ExecutionMode.CONCURRENT)
@@ -21,15 +15,25 @@ public class Task_17 extends TestBase{
 
     @Test
     void task_17() {
-        proxy.newHar();
-        driver.get("http://litecart.stqa.ru");
-        driver.findElement(By.xpath("//li[contains(@class, \"product\")]")).click();
-        Har har = proxy.endHar();
-        har.getLog().getEntries().forEach(l -> System.out.println("Requst :"+l.getRequest().getUrl() + " StatusCode: "+l.getResponse().getStatus()));
-        System.out.println(driver.manage().logs().getAvailableLogTypes());
-        System.out.println(driver.manage().logs().get("browser").getAll());
+        driver.get("http://localhost:85/litecart/admin");//порт 85, 80 занят на рабочем пк
+        driver.findElement(By.xpath("//input[@name=\"username\"]")).sendKeys("admin");
+        driver.findElement(By.xpath("//input[@name=\"password\"]")).sendKeys("admin");
+        driver.findElement(By.xpath("//button[@name=\"login\"]")).click();
+        assertEquals("My Store", driver.getTitle());
 
-        System.out.println("passed");
+        driver.findElement(By.xpath("//span[text()=\"Catalog\"]")).click();
+        driver.findElement(By.xpath("//td/a[text()=\"Rubber Ducks\"]")).click();
+        List<WebElement> productList = driver.findElements(By.xpath("//tr[@class=\"row\"]/td/img/following-sibling::a"));
+
+        for(int i =0; i < productList.size(); i++){
+
+            productList.get(i).click();
+            assertEquals(0, driver.manage().logs().get("browser").getAll().size());
+            WebElement table = webDriverWait.until((WebDriver d) -> d.findElement(By.xpath("//table[@id=\"table-images\"]")));
+            driver.navigate().back();
+            webDriverWait.until(stalenessOf(table));
+            productList = driver.findElements(By.xpath("//tr[@class=\"row\"]/td/img/following-sibling::a"));
+        }
     }
 
 

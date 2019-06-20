@@ -44,7 +44,7 @@ public class TestBase {
         @Override
         public void afterClickOn(WebElement element, WebDriver driver) {
             super.afterClickOn(element, driver);
-            System.out.println(driver.manage().logs().get("browser").getAll());
+           // System.out.println(driver.manage().logs().get("browser").getAll());
         }
 
         @Override
