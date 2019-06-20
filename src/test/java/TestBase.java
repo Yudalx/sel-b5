@@ -1,11 +1,16 @@
 import groovy.json.internal.Chr;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,6 +20,7 @@ public class TestBase {
 
     public EventFiringWebDriver driver;
     public WebDriverWait webDriverWait;
+    public BrowserMobProxy proxy;
 
     public static class EventListener extends AbstractWebDriverEventListener {
 
@@ -53,7 +59,11 @@ public class TestBase {
                 webDriverWait = new WebDriverWait(driver, 10);
                 return;
             }
+            proxy = new BrowserMobProxyServer();
+            proxy.start(0);
+            Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
             ChromeOptions options = new ChromeOptions();
+            options.setCapability(CapabilityType.PROXY, seleniumProxy);
             options.setExperimentalOption("w3c", false);
             driver = new EventFiringWebDriver(new ChromeDriver(options));
             driver.register(new EventListener());
