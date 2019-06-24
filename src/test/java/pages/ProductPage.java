@@ -5,38 +5,33 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class ProductPage {
+public class ProductPage extends Page{
 
-    WebDriver driver;
-
-    public ProductPage(WebDriver driver){
-        this.driver = driver;
+    public ProductPage( EventFiringWebDriver driver ){
+        super(driver);
         PageFactory.initElements(driver, this);
     }
 
-
-    @FindBy(xpath = "//select[@name=\"options[Size]\"]")
-    WebElement selectProductSize;
-
     @FindBy(xpath = "//button[@name=\"add_cart_product\"]")
-    WebElement addToCartButton;
+    private WebElement addToCartButton;
 
-
-    void useSelectSizeIfPresent(String size){
+    public void useSelectSizeIfPresent(String selectValue) {
         try {
-            if (selectProductSize.isDisplayed()) {
-                Select select = new Select(selectProductSize);
-                select.selectByVisibleText(size);
+            if (driver.findElement(By.xpath("//select[@name=\"options[Size]\"]")).isDisplayed()) {
+                Select select = new Select(driver.findElement(By.xpath("//select[@name=\"options[Size]\"]")));
+                select.selectByVisibleText(selectValue);
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+            System.out.println("Select is not present");
+        }
     }
 
-
-
-
-
+    public void addToBasket(){
+        addToCartButton.click();
+    }
 
 
 }

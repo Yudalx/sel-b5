@@ -1,40 +1,50 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
+import helpers.TestBase;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 
-public class MainPage {
+public class MainPage extends Page{
 
-    WebDriver driver;
-    WebDriverWait wait;
-
-    public MainPage (WebDriver driver, WebDriverWait wait){
-        this.driver = driver;
-        this.wait = wait;
-        PageFactory.initElements(driver, this);
+    public MainPage ( EventFiringWebDriver driver){
+        super(driver);
+        PageFactory.initElements(driver,this);
     }
 
     @FindBy(xpath = "//li[contains(@class, \"product\")]")
-    WebElement product;
+    private WebElement product;
 
     @FindBy(xpath = "//span[@class=\"quantity\"]")
-    WebElement basket;
+    private WebElement basket;
 
-    void openMainPage(){
-        driver.get("http://litecart.stqa.ru");//порт 85, 80 занят на рабочем пк
+    @FindBy(xpath = "//div[@id=\"cart\"]/a[text() =\"Checkout »\"]")
+    private WebElement checkout;
+
+
+    public void openMainPage(){
+        driver.navigate().to("http://litecart.stqa.ru");
     }
 
-    void selectProduct(){
+    public void selectProduct(){
         product.click();
+
     }
 
-    int getBasketProductQuantity(){
+    public void checkoutClick(){
+        checkout.click();
+    }
+
+    public int getBasketProductQuantity(){
 
         try {
            return Integer.parseInt(basket.getText());
@@ -43,15 +53,11 @@ public class MainPage {
         return 0;
     }
 
-    void waitUntilBasketQuantityChanged(int value){
+    public void waitUntilBasketQuantityChanged(int value){
         wait.until(ExpectedConditions.attributeContains(basket, "textContent", String.valueOf(value)));
     }
 
-    void returntToPreviousPage(){
+    public void returnToPreviousPage(){
         driver.navigate().back();
-        wait.until(stalenessOf(basket));
     }
-
-
-
 }

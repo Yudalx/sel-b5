@@ -1,3 +1,6 @@
+package helpers;
+
+import apps.Application;
 import groovy.json.internal.Chr;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
@@ -16,11 +19,9 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TestBase {
-    public static ThreadLocal<EventFiringWebDriver> tlDriver = new ThreadLocal<>();
+    private static ThreadLocal<Application> tlApp = new ThreadLocal<>();
 
-    public EventFiringWebDriver driver;
-    public WebDriverWait webDriverWait;
-    public BrowserMobProxy proxy;
+    protected Application app;
 
     public static class EventListener extends AbstractWebDriverEventListener {
 
@@ -54,30 +55,15 @@ public class TestBase {
     }
         @BeforeEach
         void start (){
-            if(tlDriver.get() != null){
-                driver = tlDriver.get();
-                webDriverWait = new WebDriverWait(driver, 10);
+            if(tlApp.get() != null){
+                app = tlApp.get();
                 return;
             }
-            proxy = new BrowserMobProxyServer();
-            proxy.start(0);
-            Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
-            ChromeOptions options = new ChromeOptions();
-            options.setCapability(CapabilityType.PROXY, seleniumProxy);
-            options.setExperimentalOption("w3c", false);
-            driver = new EventFiringWebDriver(new ChromeDriver(options));
-            driver.register(new EventListener());
-            tlDriver.set(driver);
-            webDriverWait = new WebDriverWait(driver, 10);
+
+            app = new Application();
+            tlApp.set(app);
 
             Runtime.getRuntime().addShutdownHook(
-                    new Thread(() -> { driver.quit(); driver = null;}));
+                    new Thread(() -> { app.quit(); app = null;}));
         }
-
-        @AfterEach
-        void tearDown(){
-//            driver.quit();
-//            driver = null;
-        }
-
 }
