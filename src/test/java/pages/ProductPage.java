@@ -24,9 +24,7 @@ public class ProductPage extends Page{
                 Select select = new Select(driver.findElement(By.xpath("//select[@name=\"options[Size]\"]")));
                 select.selectByVisibleText(selectValue);
             }
-        } catch (Exception e) {
-            System.out.println("Select is not present");
-        }
+        } catch (Exception e) {}
     }
 
     public void addToBasket(){
