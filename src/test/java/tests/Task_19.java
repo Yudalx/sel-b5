@@ -1,3 +1,5 @@
+package tests;
+
 import helpers.TestBase;
 import org.junit.jupiter.api.Test;
 

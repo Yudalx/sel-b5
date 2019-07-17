@@ -8,6 +8,7 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.BasketPage;
+import pages.LoginPage;
 import pages.MainPage;
 import pages.ProductPage;
 
@@ -23,6 +24,7 @@ public class Application {
     private MainPage mainPage;
     private ProductPage productPage;
     private BasketPage basketPage;
+    private LoginPage loginPage;
 
     public Application(){
         ChromeOptions options = new ChromeOptions();
@@ -33,6 +35,7 @@ public class Application {
         mainPage = new MainPage(driver);
         productPage = new ProductPage(driver);
         basketPage = new BasketPage(driver);
+        loginPage = new LoginPage(driver);
     }
 
 
@@ -74,6 +77,14 @@ public class Application {
         }
 
         assertEquals(products.size(), productList.size());
+    }
+
+    public void userRegistration(){
+        mainPage.openMainPage();
+
+
+
+
     }
 
     public void quit(){

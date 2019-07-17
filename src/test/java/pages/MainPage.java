@@ -30,6 +30,9 @@ public class MainPage extends Page{
     @FindBy(xpath = "//div[@id=\"cart\"]/a[text() =\"Checkout »\"]")
     private WebElement checkout;
 
+    @FindBy(xpath = "//a[text()=\"Logout\"]")
+    private WebElement logoutButton;
+
 
     public void openMainPage(){
         driver.navigate().to("http://litecart.stqa.ru");
@@ -59,5 +62,9 @@ public class MainPage extends Page{
 
     public void returnToPreviousPage(){
         driver.navigate().back();
+    }
+
+    public void logout(){
+        logoutButton.click();
     }
 }
